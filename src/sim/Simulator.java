@@ -19,14 +19,7 @@ public abstract class Simulator {
 		requestQueue = new LinkedList<>();
 
 		for(int i = 0; i<size; ++i) {
-			if(requestQueue.isEmpty() || generator.nextDouble() < 0.05) {
-				//jesli kolejka zadan jest pusta lub bog tak chcial, po prostu dodaj nowe odwolanie do strony do kolejki
-				requestQueue.add(generator.nextInt(virtualMemory) + 1);
-			}
-			else {
-				//w 95% przypadkow dodajemy do kolejki odwolanie do tej samej strony, do ktorej odwolano sie wczesniej
-				requestQueue.add(requestQueue.peekLast());
-			}
+			requestQueue.add(generator.nextInt(virtualMemory) + 1);
 		}
 	}
 }
