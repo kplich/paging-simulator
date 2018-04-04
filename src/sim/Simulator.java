@@ -22,4 +22,12 @@ public abstract class Simulator {
 			requestQueue.add(generator.nextInt(virtualMemory) + 1);
 		}
 	}
+
+	public void run() {
+		while(!requestQueue.isEmpty()) {
+			allocatePage();
+		}
+	}
+
+	protected abstract void allocatePage();
 }
