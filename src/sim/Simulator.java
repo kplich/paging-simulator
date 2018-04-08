@@ -20,7 +20,7 @@ public abstract class Simulator {
 	 * This table implements the physical memory - each cell of a table represents a frame in memory.
 	 * Each frame contains the number of a page it's holding in its memory. If a frame isn't used, it contains a -1.
 	 */
-	protected int[] physicalMemory;
+	protected int[] physicalMemory; //TODO: lepiej przedstawic jako ArrayList<Integer, Integer>?
 
 	/**
 	 * Number of frames used. Most of the time equal to the size of physical memory, smaller only at the beginning of
@@ -70,11 +70,40 @@ public abstract class Simulator {
 		generateRequests(simulationSize);
 
 		while(!requestQueue.isEmpty()) {
-			accessPage();
+			accessPage(requestQueue.peekFirst());
 		}
 	}
 
-	private void accessPage() {
+	/**
+	 *
+	 * @param page
+	 */
+	private void accessPage(int page) {
+		int destination = nextFreeFrame();
 
+		if(destination == -1) {
+			destination = frameToDump();
+			--framesUsed; //TODO: now that's what I call awkward
+			++frameMissCount;
+		}
+
+		physicalMemory[destination] = page;
+		++framesUsed;
 	}
+
+	/**
+	 * Checks if there's a free frame in physical memory.
+	 * @return index of a first free frame if it exists, or -1 if there's no available memory.
+	 */
+	private int nextFreeFrame() {
+		if(framesUsed < physicalMemory.length) {
+			for(int i = 0; i<physicalMemory.length; ++i) {
+				if(physicalMemory[i] == -1) return i;
+			}
+		}
+
+		return -1;
+	}
+
+	abstract int frameToDump();
 }
