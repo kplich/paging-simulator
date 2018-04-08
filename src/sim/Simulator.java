@@ -16,17 +16,29 @@ public abstract class Simulator {
 	 */
 	protected LinkedList<Integer> requestQueue;
 
+	//TODO: is it apparently going to be unnecessary?
 	/**
 	 * This table implements the physical memory - each cell of a table represents a frame in memory.
 	 * Each frame contains the number of a page it's holding in its memory. If a frame isn't used, it contains a -1.
 	 */
+	@ToBeDeleted
 	protected int[] physicalMemory; //TODO: lepiej przedstawic jako ArrayList<Integer, Integer>?
+
+	/**
+	 * Size of physical memory available - number of frames.
+	 */
+	protected int frames;
 
 	/**
 	 * Number of frames used. Most of the time equal to the size of physical memory, smaller only at the beginning of
 	 * the simulation
 	 */
 	protected int framesUsed;
+
+	@ToBeDeleted
+	protected ArrayList<Page> pageTableOld;
+
+	protected PageTable pageTable;
 
 	/**
 	 * I suppose this variable is meant to indicate the size of virtual memory -
@@ -39,15 +51,25 @@ public abstract class Simulator {
 	 */
 	protected int frameMissCount;
 
+	@ToBeDeleted
 	/**
 	 * Constructor, lol.
 	 * @param pages size of virtual memory - number of pages possible to allocate.
 	 * @param frames size of physical memory - number of frames to hold pages.
 	 */
-	public Simulator(int pages, int frames) {
-		virtualMemory = pages;
-		physicalMemory = new int[frames];
+	public Simulator(int pagesOld, int framesOld, int shit) {
+		virtualMemory = pagesOld;
+		physicalMemory = new int[framesOld];
 		Arrays.fill(physicalMemory, -1); //no pages allocated yet
+	}
+
+	public Simulator(int pages, int frames) {
+		pageTableOld = new ArrayList<>();
+		for(int i = 0; i < pages; ++i) {
+			pageTableOld.add(new Page(i, -1));
+		}
+
+		this.frames = frames;
 	}
 
 	/**
@@ -100,11 +122,8 @@ public abstract class Simulator {
 	 * @return true, if the page is in memory, false otherwise.
 	 */
 	private boolean isLoaded(int page) {
-		for(int frame: physicalMemory) {
-			if(frame == page) return true;
-		}
-
-		return false;
+		//TODO: make sure the page table is sorted by indices.
+		return true; //TODO
 	}
 
 	/**
