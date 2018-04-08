@@ -9,6 +9,7 @@ public abstract class Simulator {
 	/**
 	 * Random number generator, used mainly to generate requests.
 	 */
+	//TODO: might be local?
 	Random rng = new Random();
 
 	/**
@@ -21,7 +22,7 @@ public abstract class Simulator {
 	 * This table implements the physical memory - each cell of a table represents a frame in memory.
 	 * Each frame contains the number of a page it's holding in its memory. If a frame isn't used, it contains a -1.
 	 */
-	@ToBeDeleted
+	@Deprecated
 	protected int[] physicalMemory; //TODO: lepiej przedstawic jako ArrayList<Integer, Integer>?
 
 	/**
@@ -35,7 +36,7 @@ public abstract class Simulator {
 	 */
 	protected int framesUsed;
 
-	@ToBeDeleted
+	@Deprecated
 	protected ArrayList<Page> pageTableOld;
 
 	protected PageTable pageTable;
@@ -51,7 +52,7 @@ public abstract class Simulator {
 	 */
 	protected int frameMissCount;
 
-	@ToBeDeleted
+	@Deprecated
 	/**
 	 * Constructor, lol.
 	 * @param pages size of virtual memory - number of pages possible to allocate.
@@ -64,10 +65,7 @@ public abstract class Simulator {
 	}
 
 	public Simulator(int pages, int frames) {
-		pageTableOld = new ArrayList<>();
-		for(int i = 0; i < pages; ++i) {
-			pageTableOld.add(new Page(i, -1));
-		}
+		pageTable = new PageTable(pages);
 
 		this.frames = frames;
 	}
@@ -102,42 +100,14 @@ public abstract class Simulator {
 	 * @param page number of a page we try to access
 	 */
 	private void accessPage(int page) {
-		if(!isLoaded(page)) {
-			int destination = nextFreeFrame(); //we assume there's some space left for a given page
-
-			if (destination < 0) { //if there isn't, we look for a new space
-				destination = frameToDump();
-				--framesUsed; //now that's what I call awkward
-				++frameMissCount;
+		if(!pageTable.isLoaded(page)) {
+			if(pageTable.memoryFull()) {
+				//all the frames are allocated, so you need to dump one of them
 			}
-
-			physicalMemory[destination] = page; //ultimately, there was some space for our page
-			++framesUsed;
-		}
-	}
-
-	/**
-	 * Simple check if a page is loaded to memory.
-	 * @param page number of a page to be checked
-	 * @return true, if the page is in memory, false otherwise.
-	 */
-	private boolean isLoaded(int page) {
-		//TODO: make sure the page table is sorted by indices.
-		return true; //TODO
-	}
-
-	/**
-	 * Checks if there's a free frame in physical memory.
-	 * @return index of a first free frame if it exists, or -1 if there's no available memory.
-	 */
-	private int nextFreeFrame() {
-		if(framesUsed < physicalMemory.length) {
-			for(int i = 0; i<physicalMemory.length; ++i) {
-				if(physicalMemory[i] == -1) return i;
+			else {
+				//there's a free frame to allocate
 			}
 		}
-
-		return -1;
 	}
 
 	/**
