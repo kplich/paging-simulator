@@ -75,20 +75,36 @@ public abstract class Simulator {
 	}
 
 	/**
-	 *
-	 * @param page
+	 * Here we try to access a given page.
+	 * If it's not in the physical memory, we load it and dump one of the pages already in memory, if necessary.
+	 * @param page number of a page we try to access
 	 */
 	private void accessPage(int page) {
-		int destination = nextFreeFrame();
+		if(!isLoaded(page)) {
+			int destination = nextFreeFrame(); //we assume there's some space left for a given page
 
-		if(destination == -1) {
-			destination = frameToDump();
-			--framesUsed; //TODO: now that's what I call awkward
-			++frameMissCount;
+			if (destination < 0) { //if there isn't, we look for a new space
+				destination = frameToDump();
+				--framesUsed; //now that's what I call awkward
+				++frameMissCount;
+			}
+
+			physicalMemory[destination] = page; //ultimately, there was some space for our page
+			++framesUsed;
+		}
+	}
+
+	/**
+	 * Simple check if a page is loaded to memory.
+	 * @param page number of a page to be checked
+	 * @return true, if the page is in memory, false otherwise.
+	 */
+	private boolean isLoaded(int page) {
+		for(int frame: physicalMemory) {
+			if(frame == page) return true;
 		}
 
-		physicalMemory[destination] = page;
-		++framesUsed;
+		return false;
 	}
 
 	/**
@@ -105,5 +121,9 @@ public abstract class Simulator {
 		return -1;
 	}
 
+	/**
+	 * Abstract method implementing a paging algorithm.
+	 * @return an index of a frame that can be deallocated in a given moment
+	 */
 	abstract int frameToDump();
 }
