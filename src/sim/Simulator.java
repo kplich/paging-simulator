@@ -1,5 +1,7 @@
 package sim;
 
+import sim.pages.*;
+
 import java.util.*;
 
 /**

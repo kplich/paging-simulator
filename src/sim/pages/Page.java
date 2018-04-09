@@ -1,4 +1,4 @@
-package sim;
+package sim.pages;
 
 /**
  * Simple wrapper class created to make creating a sortable page table possible.
