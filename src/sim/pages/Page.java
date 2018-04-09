@@ -7,12 +7,12 @@ public class Page {
 	/**
 	 * Number of a page.
 	 */
-	private int pageNumber;
+	protected int pageNumber;
 
 	/**
 	 * Index of a frame a page has been given (or -1 if page isn't loaded in to memory).
 	 */
-	private int frameGiven;
+	protected int frameGiven;
 
 	public Page(int pageNumber, int frameGiven) {
 		this.pageNumber = pageNumber;
