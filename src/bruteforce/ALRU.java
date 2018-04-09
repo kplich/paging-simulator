@@ -5,28 +5,28 @@ import sim.pages.*;
 
 import java.util.*;
 
-public class LRU {
+public class ALRU {
 	int numberOfPages;
 	int numberOfFrames;
 	int simulationSize;
 
 	LinkedList<Integer> requestQueue;
 
-	ArrayList<LRUPage> pageTable;
+	ArrayList<ALRUPage> pageTable;
 	ArrayList<Frame> frameTable;
 
 	int framesUsed;
 
 	int pageErrors;
 
-	public LRU(int numberOfPages, int numberOfFrames, int simulationSize) {
+	public ALRU(int numberOfPages, int numberOfFrames, int simulationSize) {
 		this.numberOfPages = numberOfPages;
 		this.numberOfFrames = numberOfFrames;
 		this.simulationSize = simulationSize;
 
 		pageTable = new ArrayList<>();
 		for(int i = 0; i<numberOfPages; ++i) {
-			pageTable.add(new LRUPage(i, -1));
+			pageTable.add(new ALRUPage(i, -1));
 		}
 
 		frameTable = new ArrayList<>();
@@ -41,12 +41,11 @@ public class LRU {
 		generateRequests();
 
 		while(!requestQueue.isEmpty()) {
-			countTimeSinceReference();
-
 			sortPagesByIndex();
 			sortFramesByIndex();
 
-			LRUPage requestedPage = pageTable.get(requestQueue.pollFirst());
+			ALRUPage requestedPage = pageTable.get(requestQueue.pollFirst());
+
 			System.out.println("Requested page: " + requestedPage.getPageNumber());
 
 			System.out.println("memory:");
@@ -56,7 +55,8 @@ public class LRU {
 					System.out.print("-\t");
 				}
 				else {
-				System.out.print(frame.getPageGiven().getPageNumber() + "\t"); }
+					System.out.print(frame.getPageGiven().getPageNumber() + ", ref: " + ((ALRUPage) frame.getPageGiven()).wasReferenced() + "\t");
+				}
 
 			}
 			System.out.println("]");
@@ -71,14 +71,13 @@ public class LRU {
 				}
 				//jesli nie ma, wyrzucamy odpowiednia strone
 				else {
-					sortFramesByTimeSinceReference();
+					sortFramesByReference();
 
 					System.out.println("page to dump: " + frameTable.get(0).getPageGiven().getPageNumber());
-					System.out.println("time since last ref: " + ((LRUPage) (frameTable.get(0).getPageGiven())).getTimeSinceLastReference());
 
 					//usun poprzednie polaczenie!
 					frameTable.get(0).getPageGiven().setFrameGiven(-1);
-					((LRUPage) (frameTable.get(0).getPageGiven())).setTimeSinceLastReference(0);
+					((ALRUPage) (frameTable.get(0).getPageGiven())).setReferenced(false);
 					--framesUsed;
 
 				}
@@ -89,7 +88,8 @@ public class LRU {
 				++framesUsed;
 			}
 
-			requestedPage.setTimeSinceLastReference(0);
+			requestedPage.setReferenced(true);
+			//requestedPage.setTimeSinceLastReference(0);
 
 			System.out.println("-----");
 		}
@@ -115,6 +115,7 @@ public class LRU {
 		frameTable.sort(Comparator.comparingInt(Frame::getFrameIndex));
 	}
 
+	@Deprecated
 	private void countTimeSinceReference() {
 		for (Frame frame: frameTable) {
 			if (frame.getPageGiven() != null) {
@@ -123,12 +124,25 @@ public class LRU {
 		}
 	}
 
+	@Deprecated
 	private void sortFramesByTimeSinceReference() {
 		frameTable.sort((o1, o2) -> {
 			int timeOfPage1 = ((LRUPage) o1.getPageGiven()).getTimeSinceLastReference();
 			int timeOfPage2 = ((LRUPage) o2.getPageGiven()).getTimeSinceLastReference();
 
 			return -Integer.compare(timeOfPage1, timeOfPage2);
+		});
+	}
+
+	private void sortFramesByReference() {
+		frameTable.sort((o1, o2) -> {
+			ALRUPage page1 = ((ALRUPage) o1.getPageGiven());
+			ALRUPage page2 = ((ALRUPage) o2.getPageGiven());
+
+			if(page1.wasReferenced() == false) return -1;
+			else if(page2.wasReferenced() == false) return 1;
+			else return 0;
+
 		});
 	}
 
