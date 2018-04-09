@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * An abstract class providing a base for each paging algorithm.
  */
-public abstract class Simulator {
+public abstract class Simulator<T extends Page> {
 	/**
 	 * Random number generator, used mainly to generate requests.
 	 */
@@ -30,7 +30,7 @@ public abstract class Simulator {
 	/**
 	 * Size of physical memory available - number of frames.
 	 */
-	protected int frames;
+	protected int framesAvailable;
 
 	/**
 	 * Number of frames used. Most of the time equal to the size of physical memory, smaller only at the beginning of
@@ -67,9 +67,9 @@ public abstract class Simulator {
 	}
 
 	public Simulator(int pages, int frames) {
-		pageTable = new PageTable(pages);
+		pageTable = new PageTable(pages, frames);
 
-		this.frames = frames;
+		framesAvailable = frames;
 	}
 
 	/**
@@ -77,11 +77,7 @@ public abstract class Simulator {
 	 * @param size number of requests to be generated
 	 */
 	private void generateRequests(int size) {
-		requestQueue = new LinkedList<>();
 
-		for(int i = 0; i<size; ++i) {
-			requestQueue.add(rng.nextInt(virtualMemory) + 1);
-		}
 	}
 
 	/**
@@ -103,11 +99,12 @@ public abstract class Simulator {
 	 */
 	private void accessPage(int page) {
 		if(!pageTable.isLoaded(page)) {
-			if(pageTable.memoryFull()) {
+			if(framesUsed == framesAvailable) {
 				//all the frames are allocated, so you need to dump one of them
 			}
 			else {
 				//there's a free frame to allocate
+				pageTable.sortByAscendingFrame();
 			}
 		}
 	}

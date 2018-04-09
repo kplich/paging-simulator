@@ -31,6 +31,20 @@ public class PageTable {
 		pageTable.set(index, page);
 	}
 
+	public void sortByAscendingIndex() {
+		pageTable.sort(Comparator.comparingInt(Page::getPageNumber));
+	}
+
+	public void sortByAscendingFrame() {
+		pageTable.sort(Comparator.comparingInt(Page::getFrameGiven));
+	}
+
+	public void sortByDescendingFrame() {
+		pageTable.sort(
+		  (o1, o2) -> -Integer.compare(o1.getFrameGiven(), o2.getFrameGiven())
+					  );
+	}
+
 	/**
 	 * Simple check if a page is loaded to memory.
 	 * @param pageIndex index of a page to be checked
@@ -60,9 +74,9 @@ public class PageTable {
 		//assuming the page is sorted by frame given in ascending order
 		if(pageTable.get(0).getFrameGiven() > 0) return pageTable.get(0).getPageNumber();
 		if (usedFrames < maxFrames) {
-			for (int i = 0; i < physicalMemory.length; ++i) {
+			/*for (int i = 0; i < physicalMemory.length; ++i) {
 				if (physicalMemory[i] == -1) return i;
-			}
+			}*/
 		}
 
 		return -1;

@@ -14,4 +14,8 @@ public class FIFOPage extends Page {
 	public void setTimeSinceAllocation(int timeSinceAllocation) {
 		this.timeSinceAllocation = timeSinceAllocation;
 	}
+
+	public void countTimeSinceAllocation() {
+		++timeSinceAllocation;
+	}
 }
