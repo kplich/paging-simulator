@@ -12,7 +12,7 @@ public class LRU {
 
 	LinkedList<Integer> requestQueue;
 
-	ArrayList<FIFOPage> pageTable;
+	ArrayList<LRUPage> pageTable;
 	ArrayList<Frame> frameTable;
 
 	int framesUsed;
@@ -26,7 +26,7 @@ public class LRU {
 
 		pageTable = new ArrayList<>();
 		for(int i = 0; i<numberOfPages; ++i) {
-			pageTable.add(new FIFOPage(i, -1));
+			pageTable.add(new LRUPage(i, -1));
 		}
 
 		frameTable = new ArrayList<>();
@@ -41,7 +41,7 @@ public class LRU {
 		generateRequests();
 
 		while(!requestQueue.isEmpty()) {
-			countTimeSinceAllocation();
+			countTimeSinceReference();
 
 			sortPagesByIndex();
 			sortFramesByIndex();
@@ -71,11 +71,14 @@ public class LRU {
 				}
 				//jesli nie ma, wyrzucamy odpowiednia strone
 				else {
-					sortFramesByTimeSinceAllocation();
+					sortFramesByTimeSinceReference();
+
+					System.out.println("page to dump: " + frameTable.get(0).getPageGiven().getPageNumber());
+					System.out.println("time since last ref: " + ((LRUPage) (frameTable.get(0).getPageGiven())).getTimeSinceLastReference());
 
 					//usun poprzednie polaczenie!
 					frameTable.get(0).getPageGiven().setFrameGiven(-1);
-					((FIFOPage) (frameTable.get(0).getPageGiven())).setTimeSinceAllocation(0);
+					((LRUPage) (frameTable.get(0).getPageGiven())).setTimeSinceLastReference(0);
 					--framesUsed;
 
 				}
@@ -85,6 +88,8 @@ public class LRU {
 				requestedPage.setFrameGiven(frameTable.get(0).getFrameIndex());
 				++framesUsed;
 			}
+
+			((LRUPage) requestedPage).setTimeSinceLastReference(0);
 
 			System.out.println("-----");
 		}
@@ -110,19 +115,18 @@ public class LRU {
 		frameTable.sort(Comparator.comparingInt(Frame::getFrameIndex));
 	}
 
-	private void countTimeSinceAllocation() {
-		for(Frame frame: frameTable) {
-			if(frame.getPageGiven() != null) {
-				((FIFOPage) frame.getPageGiven()).countTimeSinceAllocation();
+	private void countTimeSinceReference() {
+		for (Frame frame: frameTable) {
+			if (frame.getPageGiven() != null) {
+				((LRUPage) frame.getPageGiven()).countTimeSinceLastReference();
 			}
 		}
 	}
 
-	//sortowanie malejace, tak aby strona z najdluzszym czasem byla na pierwszym miejscu
-	private void sortFramesByTimeSinceAllocation() {
+	private void sortFramesByTimeSinceReference() {
 		frameTable.sort((o1, o2) -> {
-			int timeOfPage1 = ((FIFOPage) o1.getPageGiven()).getTimeSinceAllocation();
-			int timeOfPage2 = ((FIFOPage) o2.getPageGiven()).getTimeSinceAllocation();
+			int timeOfPage1 = ((LRUPage) o1.getPageGiven()).getTimeSinceLastReference();
+			int timeOfPage2 = ((LRUPage) o2.getPageGiven()).getTimeSinceLastReference();
 
 			return -Integer.compare(timeOfPage1, timeOfPage2);
 		});

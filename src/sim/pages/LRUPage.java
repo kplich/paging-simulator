@@ -16,5 +16,7 @@ public class LRUPage extends Page {
 		this.timeSinceLastReference = timeSinceLastReference;
 	}
 
-	public void
+	public void countTimeSinceLastReference() {
+		++timeSinceLastReference;
+	}
 }
