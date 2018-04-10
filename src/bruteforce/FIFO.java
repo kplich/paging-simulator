@@ -49,6 +49,7 @@ public class FIFO {
 			Page requestedPage = pageTable.get(requestQueue.pollFirst());
 			System.out.println("Requested page: " + requestedPage.getPageNumber());
 
+			//print-out
 			System.out.println("memory:");
 			System.out.print("[");
 			for(Frame frame: frameTable) {

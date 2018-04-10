@@ -89,7 +89,6 @@ public class ALRU {
 			}
 
 			requestedPage.setReferenced(true);
-			//requestedPage.setTimeSinceLastReference(0);
 
 			System.out.println("-----");
 		}
@@ -113,25 +112,6 @@ public class ALRU {
 
 	private void sortFramesByIndex() {
 		frameTable.sort(Comparator.comparingInt(Frame::getFrameIndex));
-	}
-
-	@Deprecated
-	private void countTimeSinceReference() {
-		for (Frame frame: frameTable) {
-			if (frame.getPageGiven() != null) {
-				((LRUPage) frame.getPageGiven()).countTimeSinceLastReference();
-			}
-		}
-	}
-
-	@Deprecated
-	private void sortFramesByTimeSinceReference() {
-		frameTable.sort((o1, o2) -> {
-			int timeOfPage1 = ((LRUPage) o1.getPageGiven()).getTimeSinceLastReference();
-			int timeOfPage2 = ((LRUPage) o2.getPageGiven()).getTimeSinceLastReference();
-
-			return -Integer.compare(timeOfPage1, timeOfPage2);
-		});
 	}
 
 	private void sortFramesByReference() {
