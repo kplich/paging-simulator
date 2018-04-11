@@ -64,15 +64,6 @@ public class FIFO extends Simulator<FIFOPage> {
 		}
 	}
 
-	//po prostu przesun puste ramki na poczatek listy
-	private void sortFramesByPageUsed() {
-		frameTable.sort((o1, o2) -> {
-			if (o1.getPageGiven() == null) return -1;
-			else if (o2.getPageGiven() == null) return 1;
-			else return 0;
-		});
-	}
-
 	//sortowanie malejace, tak aby strona z najdluzszym czasem byla na pierwszym miejscu
 	private void sortFramesByTimeSinceAllocation() {
 		frameTable.sort((o1, o2) -> {

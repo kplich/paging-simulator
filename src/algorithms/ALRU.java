@@ -56,16 +56,6 @@ public class ALRU extends Simulator<ALRUPage> {
 		requestedPage.setReferenced(true);
 	}
 
-
-	//po prostu przesun puste ramki na poczatek listy
-	private void sortFramesByPageUsed() {
-		frameTable.sort((o1, o2) -> {
-			if (o1.getPageGiven() == null) return -1;
-			else if (o2.getPageGiven() == null) return 1;
-			else return 0;
-		});
-	}
-
 	private void sortFramesByReference() {
 		frameTable.sort((o1, o2) -> {
 			ALRUPage page1 = ((ALRUPage) o1.getPageGiven());

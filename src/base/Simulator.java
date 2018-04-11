@@ -68,8 +68,18 @@ public abstract class Simulator<P extends Page> {
 		frameTable.sort(Comparator.comparingInt(Frame::getFrameIndex));
 	}
 
+	//po prostu przesun puste ramki na poczatek listy
+	protected void sortFramesByPageUsed() {
+		frameTable.sort((o1, o2) -> {
+			if (o1.getPageGiven() == null) return -1;
+			else if (o2.getPageGiven() == null) return 1;
+			else return 0;
+		});
+	}
+
 	public int run() {
 		sortPagesByIndex();
+
 		sortFramesByIndex();
 		generateRequests();
 
@@ -77,13 +87,16 @@ public abstract class Simulator<P extends Page> {
 			dealWithPage(requestQueue.poll());
 		}
 
-		return pageErrors;
+		int tempPageErrors = pageErrors;
+		pageErrors = 0;
+
+		return tempPageErrors;
 	}
 
 	private void dealWithPage(P requestedPage) {
 		prepare(); //count some time/reference, etc.
 
-		printOut(requestedPage); //print out simulation details
+		//printOut(requestedPage); //print out simulation details
 
 		if(requestedPage.getFrameGiven() < 0) {//if the page isn't loaded into memory
 			++pageErrors; //we have to deal with a page error

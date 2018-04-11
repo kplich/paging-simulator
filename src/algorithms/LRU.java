@@ -75,13 +75,4 @@ public class LRU extends Simulator<LRUPage> {
 			return -Integer.compare(timeOfPage1, timeOfPage2);
 		});
 	}
-
-	//po prostu przesun puste ramki na poczatek listy
-	private void sortFramesByPageUsed() {
-		frameTable.sort((o1, o2) -> {
-			if (o1.getPageGiven() == null) return -1;
-			else if (o2.getPageGiven() == null) return 1;
-			else return 0;
-		});
-	}
 }
