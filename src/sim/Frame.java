@@ -2,11 +2,11 @@ package sim;
 
 import sim.pages.*;
 
-public class Frame {
+public class Frame<P extends Page> {
 	int frameIndex;
-	Page pageGiven;
+	P pageGiven;
 
-	public Frame(int frameIndex, Page pageGiven) {
+	public Frame(int frameIndex, P pageGiven) {
 		this.frameIndex = frameIndex;
 		this.pageGiven = pageGiven;
 	}
@@ -19,11 +19,11 @@ public class Frame {
 		this.frameIndex = frameIndex;
 	}
 
-	public Page getPageGiven() {
+	public P getPageGiven() {
 		return pageGiven;
 	}
 
-	public void setPageGiven(Page pageGiven) {
+	public void setPageGiven(P pageGiven) {
 		this.pageGiven = pageGiven;
 	}
 }
