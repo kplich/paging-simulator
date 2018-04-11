@@ -1,6 +1,5 @@
 package algorithms;
 
-import base.*;
 import base.Simulator;
 import sim.*;
 import sim.pages.*;
