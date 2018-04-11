@@ -53,11 +53,6 @@ public class LRU extends Simulator<LRUPage> {
 	}
 
 	@Override
-	public void finish(LRUPage requestedPage) {
-
-	}
-
-	@Override
 	public void whenPageWasLoaded(LRUPage requestedPage) {
 		requestedPage.countTimeSinceLastReference();
 	}

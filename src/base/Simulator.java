@@ -43,7 +43,9 @@ public abstract class Simulator<P extends Page> {
 		}
 	}
 
-	private void printOut() {
+	private void printOut(P requestedPage) {
+		System.out.println("requested page number: " + requestedPage.getPageNumber());
+
 		System.out.println("memory:");
 		System.out.print("[");
 		for (Frame frame : frameTable) {
@@ -55,7 +57,7 @@ public abstract class Simulator<P extends Page> {
 			}
 
 		}
-		System.out.println("]");
+		System.out.println("]\n");
 	}
 
 	protected void sortPagesByIndex() {
@@ -72,7 +74,7 @@ public abstract class Simulator<P extends Page> {
 		generateRequests();
 
 		while(!requestQueue.isEmpty()) {
-			dealWithPage(requestQueue.getFirst());
+			dealWithPage(requestQueue.poll());
 		}
 
 		return pageErrors;
@@ -81,7 +83,7 @@ public abstract class Simulator<P extends Page> {
 	private void dealWithPage(P requestedPage) {
 		prepare(); //count some time/reference, etc.
 
-		printOut(); //print out simulation details
+		printOut(requestedPage); //print out simulation details
 
 		if(requestedPage.getFrameGiven() < 0) {//if the page isn't loaded into memory
 			++pageErrors; //we have to deal with a page error

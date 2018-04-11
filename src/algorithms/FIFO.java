@@ -34,11 +34,13 @@ public class FIFO extends Simulator<FIFOPage> {
 		}
 
 		//jesli w ramce znajdowala sie jakas strona, tzn. ze trzeba ja bylo usunac i mamy mniej uzytych ramek
-		if(frameTable.get(0).getPageGiven().getPageNumber() != -1) --framesUsed;
+		if (frameTable.get(0).getPageGiven() != null) {
+			--framesUsed;
 
-		//usun poprzednie polaczenie!
-		frameTable.get(0).getPageGiven().setFrameGiven(-1);
-		frameTable.get(0).getPageGiven().setTimeSinceAllocation(0);
+			//usun poprzednie polaczenie!
+			frameTable.get(0).getPageGiven().setFrameGiven(-1);
+			frameTable.get(0).getPageGiven().setTimeSinceAllocation(0);
+		}
 	}
 
 	@Override
@@ -52,12 +54,6 @@ public class FIFO extends Simulator<FIFOPage> {
 
 	public void whenPageWasLoaded(FIFOPage requestedPage) {
 		//doNothing
-	}
-
-	@Override
-	public void finish(FIFOPage requestedPage) {
-		//nie trzeba nic robic na koncu petli, strony sa dodawane z zerowym czasem od alokacji,
-		//a odniesienie sie do strony go nie zmienia, inaczej niz w LRU
 	}
 
 	private void countTimeSinceAllocation() {
