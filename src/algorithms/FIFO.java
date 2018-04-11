@@ -16,7 +16,7 @@ public class FIFO extends Simulator<FIFOPage> {
 
 	@Override
 	public void prepare() {
-		countTimeSinceAllocation(); //for each frame in memory, mark another tick since it was allocated
+		countTimeSinceAllocation(); //for each frame in memory, mark another tick since allocation
 
 		sortPagesByIndex();
 		sortFramesByIndex();
@@ -50,9 +50,14 @@ public class FIFO extends Simulator<FIFOPage> {
 		++framesUsed;
 	}
 
+	public void whenPageWasLoaded(FIFOPage requestedPage) {
+		//doNothing
+	}
+
 	@Override
-	public void finish() {
-		//nie trzeba nic robic na koncu petli
+	public void finish(FIFOPage requestedPage) {
+		//nie trzeba nic robic na koncu petli, strony sa dodawane z zerowym czasem od alokacji,
+		//a odniesienie sie do strony go nie zmienia, inaczej niz w LRU
 	}
 
 	private void countTimeSinceAllocation() {

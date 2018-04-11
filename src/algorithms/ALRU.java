@@ -51,9 +51,10 @@ public class ALRU extends Simulator<ALRUPage> {
 	}
 
 	@Override
-	public void finish() {
-		//apparently its also not too useful here
+	public void whenPageWasLoaded(ALRUPage requestedPage) {
+		//doNothing
 	}
+
 
 	//po prostu przesun puste ramki na poczatek listy
 	private void sortFramesByPageUsed() {

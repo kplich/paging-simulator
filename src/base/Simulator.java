@@ -92,8 +92,9 @@ public abstract class Simulator<P extends Page> {
 
 			//aaaand... that's it for today!
 		}
-
-		finish();
+		else {
+			whenPageWasLoaded(requestedPage);
+		}
 	}
 
 	public abstract void prepare();
@@ -102,5 +103,5 @@ public abstract class Simulator<P extends Page> {
 
 	public abstract void allocatePage(P requestedPage);
 
-	public abstract void finish();
+	public abstract void whenPageWasLoaded(P requestedPage);
 }

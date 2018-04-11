@@ -22,11 +22,11 @@ public class LRU extends Simulator<LRUPage> {
 
 	@Override
 	public void freeUpSomeMemory() {
-		//sprawdzamy czy sa jeszcze wolne ramki
+		//sprawdzamy czy sa jeszcze wolne ramki - wtedy ustawiamy je na poczatek
 		if (framesUsed < numberOfFrames) {
 			sortFramesByPageUsed();
 		}
-		//jesli nie ma, wyrzucamy odpowiednia strone
+		//jesli nie ma, sortujemy ramki wedlug zadanego przez algorytm kryterium
 		else {
 			sortFramesByTimeSinceReference();
 
@@ -53,8 +53,13 @@ public class LRU extends Simulator<LRUPage> {
 	}
 
 	@Override
-	public void finish() {
-		//whoops, i'm stupid
+	public void finish(LRUPage requestedPage) {
+
+	}
+
+	@Override
+	public void whenPageWasLoaded(LRUPage requestedPage) {
+		requestedPage.countTimeSinceLastReference();
 	}
 
 	private void countTimeSinceReference() {

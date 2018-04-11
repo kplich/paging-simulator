@@ -16,8 +16,7 @@ public class RAND extends Simulator<Page> {
 
 	@Override
 	public void prepare() {
-		sortPagesByIndex();
-		sortFramesByIndex();
+		//doNothing - nie zmieniamy kolejnosci stron, wiec nie ma potrzeby ich sortowania
 	}
 
 	@Override
@@ -27,27 +26,27 @@ public class RAND extends Simulator<Page> {
 
 	@Override
 	public void allocatePage(Page requestedPage) {
-		if(requestedPage.getFrameGiven() < 0) {
-			Random rng = new Random();
+		Random rng = new Random();
 
-			int randomIndex = rng.nextInt(numberOfFrames); //wybieramy losowo ramke
+		int randomIndex = rng.nextInt(numberOfFrames); //wybieramy losowo ramke
 
-			//jesli w ramce znajdowala sie jakas strona to znaczy,
-			//ze trzeba ja bylo usunac i faktycznie mamy mniej uzytych ramek
-			if (frameTable.get(randomIndex).getPageGiven().getPageNumber() != -1) --framesUsed;
+		//jesli w ramce znajdowala sie jakas strona to znaczy,
+		//ze trzeba ja bylo usunac i faktycznie mamy mniej uzytych ramek
+		if (frameTable.get(randomIndex).getPageGiven().getPageNumber() != -1) --framesUsed;
 
-			//usun poprzednie polaczenie!
-			frameTable.get(randomIndex).getPageGiven().setFrameGiven(-1);
+		//usun poprzednie polaczenie!
+		frameTable.get(randomIndex).getPageGiven().setFrameGiven(-1);
 
-			//utworz nowe polaczenie!
-			frameTable.get(randomIndex).setPageGiven(requestedPage);
-			requestedPage.setFrameGiven(randomIndex);
-			++framesUsed;
-		}
+		//utworz nowe polaczenie!
+		frameTable.get(randomIndex).setPageGiven(requestedPage);
+		requestedPage.setFrameGiven(randomIndex);
+
+
+		++framesUsed;
 	}
 
 	@Override
-	public void finish() {
-
+	public void whenPageWasLoaded(Page requestedPage) {
+		//doNothing
 	}
 }
