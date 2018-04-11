@@ -21,7 +21,8 @@ public class RAND extends Simulator<Page> {
 
 	@Override
 	public void freeUpSomeMemory() {
-
+		//nie mamy zadnego konkretnego algorytmu zwalniania ramki,
+		//dlatego dla czytelnosci caly algorytm jest przeniesiony do metody allocatePage()
 	}
 
 	@Override
@@ -32,15 +33,16 @@ public class RAND extends Simulator<Page> {
 
 		//jesli w ramce znajdowala sie jakas strona to znaczy,
 		//ze trzeba ja bylo usunac i faktycznie mamy mniej uzytych ramek
-		if (frameTable.get(randomIndex).getPageGiven().getPageNumber() != -1) --framesUsed;
+		if (frameTable.get(randomIndex).getPageGiven() != null) {
+			--framesUsed;
 
-		//usun poprzednie polaczenie!
-		frameTable.get(randomIndex).getPageGiven().setFrameGiven(-1);
+			//usun poprzednie polaczenie!
+			frameTable.get(randomIndex).getPageGiven().setFrameGiven(-1);
+		}
 
 		//utworz nowe polaczenie!
 		frameTable.get(randomIndex).setPageGiven(requestedPage);
 		requestedPage.setFrameGiven(randomIndex);
-
 
 		++framesUsed;
 	}
