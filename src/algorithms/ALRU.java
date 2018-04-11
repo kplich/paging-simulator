@@ -1,7 +1,7 @@
 package algorithms;
 
 import base.*;
-import sim.pages.*;
+import base.pages.*;
 
 public class ALRU extends Simulator<ALRUPage> {
 	public ALRU(int numberOfPages, int numberOfFrames, int simulationSize) {

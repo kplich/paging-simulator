@@ -1,4 +1,4 @@
-package sim.pages;
+package base.pages;
 
 public class ALRUPage extends Page {
 	boolean wasReferenced;

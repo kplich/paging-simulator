@@ -1,8 +1,8 @@
 package algorithms;
 
+import base.*;
 import base.Simulator;
-import sim.*;
-import sim.pages.*;
+import base.pages.*;
 
 public class FIFO extends Simulator<FIFOPage> {
 

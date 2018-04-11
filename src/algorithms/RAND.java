@@ -1,7 +1,7 @@
 package algorithms;
 
 import base.*;
-import sim.pages.*;
+import base.pages.*;
 
 import java.util.*;
 

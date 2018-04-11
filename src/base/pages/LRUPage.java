@@ -1,4 +1,4 @@
-package sim.pages;
+package base.pages;
 
 public class LRUPage extends Page {
 	int timeSinceLastReference;

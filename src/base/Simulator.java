@@ -1,7 +1,6 @@
 package base;
 
-import sim.*;
-import sim.pages.*;
+import base.pages.*;
 
 import java.util.*;
 

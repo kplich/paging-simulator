@@ -1,6 +1,6 @@
-package sim;
+package base;
 
-import sim.pages.*;
+import base.pages.*;
 
 public class Frame<P extends Page> {
 	int frameIndex;
