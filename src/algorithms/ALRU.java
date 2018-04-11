@@ -4,8 +4,10 @@ import base.*;
 import base.pages.*;
 
 public class ALRU extends Simulator<ALRUPage> {
-	public ALRU(int numberOfPages, int numberOfFrames, int simulationSize) {
-		super(numberOfPages, numberOfFrames, simulationSize);
+	int chosenIndex;
+
+	public ALRU(int numberOfPages, int numberOfFrames, int simulationSize, double threshold) {
+		super(numberOfPages, numberOfFrames, simulationSize, threshold);
 
 		for (int i = 0; i < numberOfPages; ++i) {
 			pageTable.add(new ALRUPage(i, -1));
@@ -20,32 +22,33 @@ public class ALRU extends Simulator<ALRUPage> {
 
 	@Override
 	public void freeUpSomeMemory() {
+		 chosenIndex = 0;
+
 		//sprawdzamy czy sa jeszcze wolne ramki
 		if (framesUsed < numberOfFrames) {
 			sortFramesByPageUsed();
 		}
 		//jesli nie ma, wyrzucamy odpowiednia strone
 		else {
-			sortFramesByReference();
-			//System.out.println("page to dump: " + frameTable.get(0).getPageGiven().getPageNumber());
+			chosenIndex = indexToDump();
 		}
 
 		//jesli w ramce znajdowala sie jakas strona to znaczy
 		//ze trzeba ja bylo usunac i faktycznie mamy mniej uzytych ramek
-		if (frameTable.get(0).getPageGiven() != null) {
+		if (frameTable.get(chosenIndex).getPageGiven() != null) {
 			--framesUsed;
 
 			//usun poprzednie polaczenie!
-			frameTable.get(0).getPageGiven().setFrameGiven(-1);
-			frameTable.get(0).getPageGiven().setReferenced(false);
+			frameTable.get(chosenIndex).getPageGiven().setFrameGiven(-1);
+			frameTable.get(chosenIndex).getPageGiven().setReferenced(false);
 		}
 	}
 
 	@Override
 	public void allocatePage(ALRUPage requestedPage) {
 		//utworz nowe polaczenie!
-		frameTable.get(0).setPageGiven(requestedPage);
-		requestedPage.setFrameGiven(frameTable.get(0).getFrameIndex());
+		frameTable.get(chosenIndex).setPageGiven(requestedPage);
+		requestedPage.setFrameGiven(frameTable.get(chosenIndex).getFrameIndex());
 		requestedPage.setReferenced(true);
 
 		++framesUsed;
@@ -66,5 +69,15 @@ public class ALRU extends Simulator<ALRUPage> {
 			else return 0;
 
 		});
+	}
+
+	private int indexToDump() {
+		for(int i = 0; i<frameTable.size(); ++i) {
+			if(frameTable.get(i).getPageGiven().wasReferenced()) {
+				frameTable.get(i).getPageGiven().setReferenced(false);
+			}
+			else return i;
+		}
+		return 0;
 	}
 }

@@ -6,8 +6,8 @@ import base.pages.*;
 import java.util.*;
 
 public class RAND extends Simulator<Page> {
-	public RAND(int numberOfPages, int numberOfFrames, int simulationSize) {
-		super(numberOfPages, numberOfFrames, simulationSize);
+	public RAND(int numberOfPages, int numberOfFrames, int simulationSize, double threshold) {
+		super(numberOfPages, numberOfFrames, simulationSize, threshold);
 
 		for (int i = 0; i < numberOfPages; ++i) {
 			pageTable.add(new Page(i, -1));

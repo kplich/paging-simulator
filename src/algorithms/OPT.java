@@ -4,8 +4,8 @@ import base.*;
 import base.pages.*;
 
 public class OPT extends Simulator<OPTPage> {
-	public OPT(int numberOfPages, int numberOfFrames, int simulationSize) {
-		super(numberOfPages, numberOfFrames, simulationSize);
+	public OPT(int numberOfPages, int numberOfFrames, int simulationSize, double threshold) {
+		super(numberOfPages, numberOfFrames, simulationSize, threshold);
 
 		for (int i = 0; i < numberOfPages; ++i) {
 			pageTable.add(new OPTPage(i, -1));
@@ -37,6 +37,7 @@ public class OPT extends Simulator<OPTPage> {
 
 			//usun poprzednie polaczenie!
 			frameTable.get(0).getPageGiven().setFrameGiven(-1);
+			frameTable.get(0).getPageGiven().setTimeUntilNextReference(0);
 		}
 	}
 

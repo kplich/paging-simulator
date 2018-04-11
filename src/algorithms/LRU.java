@@ -5,8 +5,8 @@ import base.Simulator;
 import base.pages.*;
 
 public class LRU extends Simulator<LRUPage> {
-	public LRU(int numberOfPages, int numberOfFrames, int simulationSize) {
-		super(numberOfPages, numberOfFrames, simulationSize);
+	public LRU(int numberOfPages, int numberOfFrames, int simulationSize, double threshold) {
+		super(numberOfPages, numberOfFrames, simulationSize, threshold);
 
 		for (int i = 0; i < numberOfPages; ++i) {
 			pageTable.add(new LRUPage(i, -1));
@@ -15,7 +15,7 @@ public class LRU extends Simulator<LRUPage> {
 
 	@Override
 	public void prepare() {
-		countTimeSinceReference();
+		markTimeSinceLastRef();
 		sortPagesByIndex();
 		sortFramesByIndex();
 	}
@@ -29,9 +29,6 @@ public class LRU extends Simulator<LRUPage> {
 		//jesli nie ma, sortujemy ramki wedlug zadanego przez algorytm kryterium
 		else {
 			sortFramesByTimeSinceReference();
-
-			//System.out.println("page to dump: " + frameTable.get(0).getPageGiven().getPageNumber());
-			//System.out.println("time since last ref: " + ((LRUPage) (frameTable.get(0).getPageGiven())).getTimeSinceLastReference());
 		}
 
 		//jesli w ramce znajdowala sie jakas strona to znaczy
@@ -56,10 +53,10 @@ public class LRU extends Simulator<LRUPage> {
 
 	@Override
 	public void whenPageWasLoaded(LRUPage requestedPage) {
-		requestedPage.countTimeSinceLastReference();
+		requestedPage.setTimeSinceLastReference(0); //gdy ramka zostala uzyta, wyzeruj jej czas od ostatniej referencji
 	}
 
-	private void countTimeSinceReference() {
+	private void markTimeSinceLastRef() {
 		for (Frame<LRUPage> frame: frameTable) {
 			if (frame.getPageGiven() != null) {
 				frame.getPageGiven().countTimeSinceLastReference();
@@ -67,6 +64,7 @@ public class LRU extends Simulator<LRUPage> {
 		}
 	}
 
+	//na poczatku listy niech znajda sie ramki ktore zostaly najdawniej uzyte
 	private void sortFramesByTimeSinceReference() {
 		frameTable.sort((o1, o2) -> {
 			int timeOfPage1 = o1.getPageGiven().getTimeSinceLastReference();

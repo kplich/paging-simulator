@@ -6,8 +6,8 @@ import base.pages.*;
 
 public class FIFO extends Simulator<FIFOPage> {
 
-	public FIFO(int numberOfPages, int numberOfFrames, int simulationSize) {
-		super(numberOfPages, numberOfFrames, simulationSize);
+	public FIFO(int numberOfPages, int numberOfFrames, int simulationSize, double threshold) {
+		super(numberOfPages, numberOfFrames, simulationSize, threshold);
 
 		for (int i = 0; i < numberOfPages; ++i) {
 			pageTable.add(new FIFOPage(i, -1));

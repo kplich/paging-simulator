@@ -8,6 +8,7 @@ public abstract class Simulator<P extends Page> {
 	protected int numberOfPages;
 	protected int numberOfFrames;
 	protected int simulationSize;
+	private double threshold;
 
 	protected LinkedList<P> requestQueue;
 
@@ -18,10 +19,11 @@ public abstract class Simulator<P extends Page> {
 
 	protected int pageErrors;
 
-	public Simulator(int numberOfPages, int numberOfFrames, int simulationSize) {
+	public Simulator(int numberOfPages, int numberOfFrames, int simulationSize, double threshold) {
 		this.numberOfPages = numberOfPages;
 		this.numberOfFrames = numberOfFrames;
 		this.simulationSize = simulationSize;
+		this.threshold = threshold;
 
 		pageTable = new ArrayList<>(); //not initialized here because of generics
 
@@ -38,13 +40,31 @@ public abstract class Simulator<P extends Page> {
 
 		requestQueue = new LinkedList<>();
 
-		for (int i = 0; i < simulationSize; ++i) {
-			requestQueue.add(pageTable.get(rng.nextInt(numberOfPages)));
+		while(requestQueue.size() < simulationSize) {
+			double chance = rng.nextDouble();
+
+			try {
+				if(chance < threshold) {
+					requestQueue.add(pageTable.get(rng.nextInt(numberOfPages)));
+				}
+				else if (chance < threshold + ((1-threshold)/2)) {
+					requestQueue.add(pageTable.get(requestQueue.peek().getPageNumber() - rng.nextInt((int) threshold*numberOfPages + 1)));
+				}
+				else {
+					requestQueue.add(pageTable.get(requestQueue.peek().getPageNumber() + rng.nextInt((int) threshold*numberOfPages + 1)));
+				}
+			}
+			catch (IndexOutOfBoundsException | NullPointerException e) {
+				//System.err.println("lolz"); ignore
+			}
+
 		}
 	}
 
 	private void printOut(P requestedPage) {
+		System.out.println("number of page errors: " + pageErrors + "\n");
 		System.out.println("requested page number: " + requestedPage.getPageNumber());
+		System.out.println("requested page's frame: " + requestedPage.getFrameGiven());
 
 		System.out.println("memory:");
 		System.out.print("[");
@@ -57,7 +77,7 @@ public abstract class Simulator<P extends Page> {
 			}
 
 		}
-		System.out.println("]\n");
+		System.out.println("]\n------------------\n");
 	}
 
 	protected void sortPagesByIndex() {
