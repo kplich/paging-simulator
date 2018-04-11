@@ -36,11 +36,13 @@ public class LRU extends Simulator<LRUPage> {
 
 		//jesli w ramce znajdowala sie jakas strona to znaczy
 		//ze trzeba ja bylo usunac i faktycznie mamy mniej uzytych ramek
-		if (frameTable.get(0).getPageGiven().getPageNumber() != -1) --framesUsed;
+		if (frameTable.get(0).getPageGiven() != null) {
+			--framesUsed;
 
-		//usun poprzednie polaczenie!
-		frameTable.get(0).getPageGiven().setFrameGiven(-1);
-		frameTable.get(0).getPageGiven().setTimeSinceLastReference(0);
+			//usun poprzednie polaczenie!
+			frameTable.get(0).getPageGiven().setFrameGiven(-1);
+			frameTable.get(0).getPageGiven().setTimeSinceLastReference(0);
+		}
 	}
 
 	@Override

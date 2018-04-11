@@ -27,17 +27,18 @@ public class ALRU extends Simulator<ALRUPage> {
 		//jesli nie ma, wyrzucamy odpowiednia strone
 		else {
 			sortFramesByReference();
-
 			//System.out.println("page to dump: " + frameTable.get(0).getPageGiven().getPageNumber());
 		}
 
 		//jesli w ramce znajdowala sie jakas strona to znaczy
 		//ze trzeba ja bylo usunac i faktycznie mamy mniej uzytych ramek
-		if (frameTable.get(0).getPageGiven().getPageNumber() != -1) --framesUsed;
+		if (frameTable.get(0).getPageGiven() != null) {
+			--framesUsed;
 
-		//usun poprzednie polaczenie!
-		frameTable.get(0).getPageGiven().setFrameGiven(-1);
-		frameTable.get(0).getPageGiven().setReferenced(false);
+			//usun poprzednie polaczenie!
+			frameTable.get(0).getPageGiven().setFrameGiven(-1);
+			frameTable.get(0).getPageGiven().setReferenced(false);
+		}
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class ALRU extends Simulator<ALRUPage> {
 
 	@Override
 	public void whenPageWasLoaded(ALRUPage requestedPage) {
-		//doNothing
+		requestedPage.setReferenced(true);
 	}
 
 
