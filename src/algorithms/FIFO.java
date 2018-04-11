@@ -1,18 +1,14 @@
 package algorithms;
 
-import base.*;
 import base.Simulator;
 import sim.*;
 import sim.pages.*;
-
-import java.util.*;
 
 public class FIFO extends Simulator<FIFOPage> {
 
 	public FIFO(int numberOfPages, int numberOfFrames, int simulationSize) {
 		super(numberOfPages, numberOfFrames, simulationSize);
 
-		pageTable = new ArrayList<>();
 		for (int i = 0; i < numberOfPages; ++i) {
 			pageTable.add(new FIFOPage(i, -1));
 		}

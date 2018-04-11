@@ -24,6 +24,8 @@ public abstract class Simulator<P extends Page> {
 		this.numberOfFrames = numberOfFrames;
 		this.simulationSize = simulationSize;
 
+		pageTable = new ArrayList<>(); //not initialized here because of generics
+
 		frameTable = new ArrayList<>();
 		for (int i = 0; i < numberOfFrames; ++i) {
 			frameTable.add(new Frame<>(i, null));

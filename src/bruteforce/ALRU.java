@@ -85,10 +85,10 @@ public class ALRU {
 				//utworz nowe polaczenie!
 				frameTable.get(0).setPageGiven(requestedPage);
 				requestedPage.setFrameGiven(frameTable.get(0).getFrameIndex());
+				requestedPage.setReferenced(true);
 				++framesUsed;
 			}
 
-			requestedPage.setReferenced(true);
 
 			System.out.println("-----");
 		}
