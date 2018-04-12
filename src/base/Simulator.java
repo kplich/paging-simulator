@@ -33,6 +33,7 @@ public abstract class Simulator<P extends Page> {
 		}
 
 		framesUsed = 0;
+		//generateRequests();
 	}
 
 	private void generateRequests() {
@@ -48,10 +49,11 @@ public abstract class Simulator<P extends Page> {
 					requestQueue.add(pageTable.get(rng.nextInt(numberOfPages)));
 				}
 				else if (chance < threshold + ((1-threshold)/2)) {
-					requestQueue.add(pageTable.get(requestQueue.peek().getPageNumber() - rng.nextInt((int) threshold*numberOfPages + 1)));
+					requestQueue.add(pageTable.get(requestQueue.peek().getPageNumber() - (int) rng.nextGaussian() * numberOfPages));
 				}
 				else {
-					requestQueue.add(pageTable.get(requestQueue.peek().getPageNumber() + rng.nextInt((int) threshold*numberOfPages + 1)));
+					requestQueue.add(pageTable.get(requestQueue.peek().getPageNumber() +
+												   (int) rng.nextGaussian() * numberOfPages));
 				}
 			}
 			catch (IndexOutOfBoundsException | NullPointerException e) {
@@ -99,7 +101,6 @@ public abstract class Simulator<P extends Page> {
 
 	public int run() {
 		sortPagesByIndex();
-
 		sortFramesByIndex();
 		generateRequests();
 
@@ -139,4 +140,12 @@ public abstract class Simulator<P extends Page> {
 	public abstract void allocatePage(P requestedPage);
 
 	public abstract void whenPageWasLoaded(P requestedPage);
+
+	public void setRequestQueue(LinkedList<P> requestQueue) {
+		this.requestQueue = requestQueue;
+	}
+
+	public LinkedList<P> getRequestQueue() {
+		return requestQueue;
+	}
 }
